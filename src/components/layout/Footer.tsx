@@ -1,7 +1,51 @@
+
+import React, { useState } from "react";
 import { Card, Button } from '../ui';
 import { companyInfo } from '../../data';
 
-export const Footer = () => {
+  // Netlify form status
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  // Helper to encode form data for Netlify
+  function encode(data: Record<string, string>) {
+    return Object.keys(data)
+      .map(
+        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
+      )
+      .join("&");
+  }
+
+  // Netlify-friendly submit handler
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('sending');
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const data: Record<string, string> = {
+      "form-name": "sherbime-footer",
+    };
+    for (const [key, value] of formData.entries()) {
+      if (typeof value === "string") {
+        if (data[key]) data[key] = `${data[key]}, ${value}`;
+        else data[key] = value;
+      }
+    }
+    try {
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode(data),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      form.reset();
+      setStatus("success");
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch (err) {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 5000);
+    }
+  };
+
   return (
     <footer id="contact" className="bg-gray-900 text-white pt-16 pb-8">
       <div className="container">
@@ -114,6 +158,7 @@ export const Footer = () => {
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               className="space-y-3"
+              onSubmit={handleSubmit}
             >
               <input type="hidden" name="form-name" value="sherbime-footer" />
               <p className="hidden">
@@ -196,9 +241,15 @@ export const Footer = () => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 h-20 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-900 text-gray-900" 
                 placeholder="Detaje shtesë (opsionale)"
               />
-              <Button type="submit" className="w-full" variant="primary" size="md">
-                Dërgo kërkesën
+              <Button type="submit" className="w-full" variant="primary" size="md" disabled={status === 'sending'}>
+                {status === 'sending' ? 'Duke dërguar...' : 'Dërgo kërkesën'}
               </Button>
+              {status === "success" && (
+                <p className="mt-3 text-sm text-green-600">Kërkesa u dërgua me sukses ✅</p>
+              )}
+              {status === "error" && (
+                <p className="mt-3 text-sm text-red-600">Gabim gjatë dërgimit. Provo përsëri.</p>
+              )}
             </form>
             
             <div className="mt-4 pt-4 border-t border-gray-200 text-center text-xs text-gray-600">
