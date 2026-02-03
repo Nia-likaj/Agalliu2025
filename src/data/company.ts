@@ -1,13 +1,12 @@
 export const companyInfo = {
   name: "Agalliu 2025",
   tagline: "Cilësi • Korrektësi • Besueshmëri",
-  email: "anisagalliu@gmail.com",
+  email: "agalliuconstruction2025@gmail.com",
   phone: "+355 68 488 8830",
   address: "Levan, Fier",
   social: {
-    facebook: "#",
-    instagram: "#",
-    linkedin: "#",
+    instagram: "https://www.instagram.com/agalliuanis?igsh=eDZmZ3hwbmZhZmQ=",
+    
   },
   yearEstablished: 2025,
 };
@@ -25,13 +24,13 @@ export const company = {
   ],
   contacts: {
     phone: "+355 68 488 8830",
-    email: "anisagalliu@gmail.com",
+    email: "agalliuconstruction2025@gmail.com",
     address: "Levan, Fier, Shqipëri",
     hours: "Hën–Sht: 08:00–18:00",
   },
   socials: {
-    instagram: "https://instagram.com/agalliu2025",
-    facebook: "https://facebook.com/agalliu2025",
+    instagram: "https://www.instagram.com/agalliuanis?igsh=eDZmZ3hwbmZhZmQ=",
+
   },
   brand: {
     logoLight: "/assets/brand/Agalliu.png",
