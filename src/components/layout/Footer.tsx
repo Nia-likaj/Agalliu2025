@@ -1,47 +1,7 @@
-import React, { useState } from "react";
 import { Card, Button } from '../ui';
 import { companyInfo } from '../../data';
 
 export const Footer = () => {
-  const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-
-  function encode(data: Record<string, string>) {
-    return Object.keys(data)
-      .map(
-        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
-      )
-      .join("&");
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmitState('submitting');
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const data: Record<string, string> = {
-      "form-name": "sherbime-footer",
-    };
-    for (const [key, value] of formData.entries()) {
-      if (typeof value === "string") {
-        if (data[key]) data[key] = `${data[key]}, ${value}`;
-        else data[key] = value;
-      }
-    }
-    try {
-      const res = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode(data),
-      });
-      if (!res.ok) throw new Error("Request failed");
-      form.reset();
-      setSubmitState('success');
-      setTimeout(() => setSubmitState('idle'), 4000);
-    } catch (err) {
-      setSubmitState('error');
-      setTimeout(() => setSubmitState('idle'), 5000);
-    }
-  };
 
   return (
     <footer id="contact" className="bg-gray-900 text-white pt-16 pb-8">
@@ -156,7 +116,6 @@ export const Footer = () => {
               data-netlify="true"
               netlify-honeypot="bot-field"
               action="/"
-              onSubmit={handleSubmit}
             >
               <input type="hidden" name="form-name" value="sherbime-footer" />
               <p className="hidden">
@@ -239,19 +198,9 @@ export const Footer = () => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 h-20 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-900 text-gray-900" 
                 placeholder="Detaje shtesë (opsionale)"
               />
-              <Button type="submit" className="w-full" variant="primary" size="md" disabled={submitState === 'submitting'}>
+              <Button type="submit" className="w-full" variant="primary" size="md">
                 Dërgo kërkesën
               </Button>
-              {submitState === 'success' && (
-                <p className="text-sm text-green-600 text-center">
-                  Kërkesa u dërgua me sukses, ju faleminderit!
-                </p>
-              )}
-              {submitState === 'error' && (
-                <p className="text-sm text-red-600 text-center">
-                  Gabim gjatë dërgimit. Provo përsëri.
-                </p>
-              )}
             </form>
             
             <div className="mt-4 pt-4 border-t border-gray-200 text-center text-xs text-gray-600">
