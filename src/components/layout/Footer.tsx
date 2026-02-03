@@ -1,8 +1,8 @@
-
 import React, { useState } from "react";
 import { Card, Button } from '../ui';
 import { companyInfo } from '../../data';
 
+export const Footer = () => {
   // Netlify form status
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
