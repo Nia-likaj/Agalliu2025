@@ -108,32 +108,19 @@ export const Footer = () => {
             
             <p className="text-gray-600 text-sm mb-4">Kërkoni shërbimet, tarifat ose konsultë falas</p>
             
-            <form className="space-y-3" onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              const services = [];
-              if (formData.get('service1')) services.push('Punime ndërtimi & rifinitura');
-              if (formData.get('service2')) services.push('Izolime & termoizolime');
-              if (formData.get('service3')) services.push('Pastrim & dezinfektim');
-              if (formData.get('service4')) services.push('Mirëmbajtje & shërbime të tjera');
-              
-              const subject = encodeURIComponent('Kërkesë për shërbim - Agalliu 2025');
-              const body = encodeURIComponent(`
-Emri: ${formData.get('emri')} ${formData.get('mbiemri')}
-Email: ${formData.get('email')}
-Telefoni: ${formData.get('telefoni')}
-Qyteti: ${formData.get('qyteti')}
-Data e dëshiruar: ${formData.get('data')}
-
-Shërbimet e zgjedhura:
-${services.join('\n')}
-
-Detaje shtesë:
-${formData.get('detaje') || 'Nuk ka detaje shtesë'}
-              `);
-              
-              window.location.href = `mailto:likajhysnie02@gmail.com?subject=${subject}&body=${body}`;
-            }}>
+            <form
+              name="sherbime-footer"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              className="space-y-3"
+            >
+              <input type="hidden" name="form-name" value="sherbime-footer" />
+              <p className="hidden">
+                <label>
+                  Don’t fill this out if you’re human: <input name="bot-field" />
+                </label>
+              </p>
               <div className="grid grid-cols-2 gap-3">
                 <input 
                   name="emri"
@@ -170,19 +157,19 @@ ${formData.get('detaje') || 'Nuk ka detaje shtesë'}
                 <label className="block text-xs font-semibold text-gray-700 mb-2">Lloji i shërbimit</label>
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input name="service1" type="checkbox" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                    <input type="checkbox" name="lloji_sherbimit" value="Punime ndërtimi & rifinitura" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
                     <span className="text-xs text-gray-700">Punime ndërtimi & rifinitura</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input name="service2" type="checkbox" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                    <input type="checkbox" name="lloji_sherbimit" value="Izolime & termoizolime" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
                     <span className="text-xs text-gray-700">Izolime & termoizolime</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input name="service3" type="checkbox" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                    <input type="checkbox" name="lloji_sherbimit" value="Pastrim & dezinfektim" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
                     <span className="text-xs text-gray-700">Pastrim & dezinfektim</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input name="service4" type="checkbox" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                    <input type="checkbox" name="lloji_sherbimit" value="Mirëmbajtje & shërbime të tjera" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
                     <span className="text-xs text-gray-700">Mirëmbajtje & shërbime të tjera</span>
                   </label>
                 </div>
