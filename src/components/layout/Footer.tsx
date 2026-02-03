@@ -7,9 +7,34 @@ export const Footer = () => {
     <footer id="contact" className="bg-gray-900 text-white pt-16 pb-8">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-12 mb-12">
+      import { useState } from 'react';
           {/* Left - Company Info */}
           <div className="space-y-6">
+        const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
             {/* Logo and Name */}
+        const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          try {
+            setSubmitState('submitting');
+            const form = e.currentTarget;
+            const formData = new FormData(form);
+            formData.set('form-name', 'sherbime-footer');
+            const body = new URLSearchParams();
+            for (const [key, value] of formData.entries()) {
+              body.append(key, String(value));
+            }
+            const res = await fetch('/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: body.toString(),
+            });
+            if (!res.ok) throw new Error('Submit failed');
+            setSubmitState('success');
+            form.reset();
+          } catch (err) {
+            setSubmitState('error');
+          }
+        };
             <div className="flex items-center gap-4">
               <div className="w-20 h-20">
                 <img 
@@ -158,22 +183,22 @@ export const Footer = () => {
               <div className="border border-gray-300 rounded-lg p-3">
                 <label className="block text-xs font-semibold text-gray-700 mb-2">Lloji i shërbimit</label>
                 <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" name="lloji_sherbimit" value="Punime ndërtimi & rifinitura" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
-                    <span className="text-xs text-gray-700">Punime ndërtimi & rifinitura</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" name="lloji_sherbimit" value="Izolime & termoizolime" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
-                    <span className="text-xs text-gray-700">Izolime & termoizolime</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" name="lloji_sherbimit" value="Pastrim & dezinfektim" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
-                    <span className="text-xs text-gray-700">Pastrim & dezinfektim</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" name="lloji_sherbimit" value="Mirëmbajtje & shërbime të tjera" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
-                    <span className="text-xs text-gray-700">Mirëmbajtje & shërbime të tjera</span>
-                  </label>
+                   <label className="flex items-center gap-2 cursor-pointer">
+                     <input type="checkbox" name="lloji_sherbimit[]" value="Punime ndërtimi & rifinitura" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                     <span className="text-xs text-gray-700">Punime ndërtimi & rifinitura</span>
+                   </label>
+                   <label className="flex items-center gap-2 cursor-pointer">
+                     <input type="checkbox" name="lloji_sherbimit[]" value="Izolime & termoizolime" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                     <span className="text-xs text-gray-700">Izolime & termoizolime</span>
+                   </label>
+                   <label className="flex items-center gap-2 cursor-pointer">
+                     <input type="checkbox" name="lloji_sherbimit[]" value="Pastrim & dezinfektim" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                     <span className="text-xs text-gray-700">Pastrim & dezinfektim</span>
+                   </label>
+                   <label className="flex items-center gap-2 cursor-pointer">
+                     <input type="checkbox" name="lloji_sherbimit[]" value="Mirëmbajtje & shërbime të tjera" className="w-3.5 h-3.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                     <span className="text-xs text-gray-700">Mirëmbajtje & shërbime të tjera</span>
+                   </label>
                 </div>
               </div>
 
