@@ -1,40 +1,48 @@
+import { useState, type FormEvent } from 'react';
 import { Card, Button } from '../ui';
 import { companyInfo } from '../../data';
 
-export const Footer = () => {
+type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
+export const Footer = () => {
+  const [submitState, setSubmitState] = useState<SubmitState>('idle');
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setSubmitState('submitting');
+
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+      formData.set('form-name', 'sherbime-footer');
+
+      const body = new URLSearchParams();
+      for (const [key, value] of formData.entries()) {
+        body.append(key, String(value));
+      }
+
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      setSubmitState('success');
+      form.reset();
+    } catch {
+      setSubmitState('error');
+    }
+  };
   return (
     <footer id="contact" className="bg-gray-900 text-white pt-16 pb-8">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-12 mb-12">
-      import { useState } from 'react';
-          {/* Left - Company Info */}
-          <div className="space-y-6">
-        const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-            {/* Logo and Name */}
-        const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          try {
-            setSubmitState('submitting');
-            const form = e.currentTarget;
-            const formData = new FormData(form);
-            formData.set('form-name', 'sherbime-footer');
-            const body = new URLSearchParams();
-            for (const [key, value] of formData.entries()) {
-              body.append(key, String(value));
-            }
-            const res = await fetch('/', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: body.toString(),
-            });
-            if (!res.ok) throw new Error('Submit failed');
-            setSubmitState('success');
-            form.reset();
-          } catch (err) {
-            setSubmitState('error');
-          }
-        };
+      {/* Left - Company Info */}
+      <div className="space-y-6">
+        {/* Logo and Name */}
             <div className="flex items-center gap-4">
               <div className="w-20 h-20">
                 <img 
@@ -140,7 +148,7 @@ export const Footer = () => {
               method="POST"
               data-netlify="true"
               netlify-honeypot="bot-field"
-              action="/"
+              onSubmit={handleSubmit}
             >
               <input type="hidden" name="form-name" value="sherbime-footer" />
               <p className="hidden">
@@ -224,8 +232,20 @@ export const Footer = () => {
                 placeholder="Detaje shtesë (opsionale)"
               />
               <Button type="submit" className="w-full" variant="primary" size="md">
-                Dërgo kërkesën
+                {submitState === 'submitting' ? 'Duke dërguar...' : 'Dërgo kërkesën'}
               </Button>
+
+              {/* Mesazhi poshtë formës, pa ndryshuar UI-në */}
+              {submitState === 'success' && (
+                <p className="text-green-700 text-sm mt-2">
+                  Kërkesa u dërgua me sukses, ju faleminderit!
+                </p>
+              )}
+              {submitState === 'error' && (
+                <p className="text-red-700 text-sm mt-2">
+                  Ndodhi një problem gjatë dërgimit. Provo përsëri.
+                </p>
+              )}
             </form>
             
             <div className="mt-4 pt-4 border-t border-gray-200 text-center text-xs text-gray-600">
